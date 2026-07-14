@@ -1,0 +1,20 @@
+services:
+  iiidev:
+    image: shawoo/iii
+    ports:
+      - "13113:8888"
+      - "3113:3113"
+      - "49134:49134"  # WebSocket (worker connections)
+      - "3111:3111"    # REST API
+      - "3112:3112"    # Stream API
+      - "9464:9464"    # Prometheus metrics
+      # - "49135:49135"  # Browser SDK / RBAC — enable iii-worker-manager in config.yaml
+    volumes:
+      #- ./config.yaml:/src/config.yaml:ro
+      - ./iii/data:/src/data
+      - ./iii/config:/src/config
+    env_file: .env
+    environment:
+      - RUST_LOG=debug
+      - III_EXECUTION_CONTEXT=docker
+    restart: unless-stopped
