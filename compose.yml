@@ -2,8 +2,12 @@ services:
   iiidev:
     image: shawoo/iii
     ports:
+      - "80:80"
+      
       - "13113:8888"
+      
       - "3113:3113"
+      
       - "49134:49134"  # WebSocket (worker connections)
       - "3111:3111"    # REST API
       - "3112:3112"    # Stream API
@@ -15,6 +19,6 @@ services:
       - ./iii/config:/src/config
     env_file: .env
     environment:
-      - RUST_LOG=debug
+      - RUST_LOG=info
       - III_EXECUTION_CONTEXT=docker
     restart: unless-stopped
