@@ -33,4 +33,7 @@ RUN iii worker add harness
 
 EXPOSE 49134 3111 3112 9464
 
+COPY caddy /src/caddy
+COPY Caddyfile /src/Caddyfile
+
 CMD ["/usr/bin/supervisord", "-n","-c", "/src/supervisord.conf"]
