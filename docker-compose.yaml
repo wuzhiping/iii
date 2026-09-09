@@ -1,0 +1,37 @@
+services:
+  iii:
+    image: shawoo/iii:openwiki
+    devices:
+      - /dev/kvm:/dev/kvm
+    volumes:
+      - /tmp/openwiki-data/:/tmp/openwiki-data/
+    deploy:
+      resources:
+        limits:
+          cpus: '4'   # 限制最多使用 1.5 个 CPU 核心
+          memory: 8G
+        reservations:
+          cpus: '0.5'   # 最少预留 0.5 个 CPU 核心
+          memory: 256M
+    ports:
+      - "13114:80"
+      - "13113:8888"
+      - "3113:3113"
+      - "49134:49134"  # WebSocket (worker connections)
+      - "3111:3111"    # REST API
+      - "3112:3112"    # Stream API
+      - "9464:9464"    # Prometheus metrics
+      # - "49135:49135"  # Browser SDK / RBAC — enable iii-worker-manager in config.yaml
+   #volumes:
+      #- ./config.yaml:/src/config.yaml:ro
+      # - iii_data:/src/data
+      # Configuration store (./config in the container). Without this volume
+      # the engine still boots, but runtime edits via `iii config set` are
+      # lost when the container is recreated.
+      # - iii_config:/src/config
+    env_file: .env
+    environment:
+      - RUST_LOG=debug
+      - III_EXECUTION_CONTEXT=docker
+    #command: console  --engine-host 0.0.0.0 --host 0.0.0.0
+    restart: unless-stopped
